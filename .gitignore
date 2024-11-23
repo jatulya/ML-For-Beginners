@@ -5,6 +5,9 @@
 
 dist 
 
+#virtual env by jazz
+.venv
+
 # User-specific files
 *.rsuser
 *.suo

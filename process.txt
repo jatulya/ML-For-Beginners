@@ -1,0 +1,59 @@
+1. Fork and clone the repository
+2. navigate to regression/tools/notebooks.ipnyb
+3. create a virtual env using
+    python -m venv .venv (.venv is commonly used to name the directory where virtual env and packages are stored)
+    .venv/lib contains all the packages to be used
+    add .venv to the .gitingore
+4. Activate the venv using 
+    .venv\Scripts\activate
+5. install packages using pip install pandas matplotlib numpy scikit-learn ipykernel
+6. check if they are executed using pip list or browsing the lib directory
+7. tell the vscode to run the code in venv ; go to the icon on the side and change the kernel
+
+BUILDING BASIC REGRESSION MODEL
+===============================
+Here, we are using already in-build dataset in scikit-learn for learning purposes on diabetes data.
+1. Import libraries
+    import matplotlib.pyplot as plt //graphing
+    import numpy as np //numeric data
+    from sklearn import datasets, linear_model, model_selection //model_selection is for splitting data into training and test
+2. Load the dataset -various datasets and how to load them are given in the scikit-learn page https://scikit-learn.org/stable/datasets/toy_dataset.html#diabetes-dataset 
+   X, y = datasets.load_diabetes(return_X_y=True)
+   X: it is the feature matrix and the input given to the model (like the values related to the attributes mentioned in the dataset)
+   y: it is the target variable (here, it is the measure of disease progression after an year) associated with each set of attributes
+   return_X_y=true ==> split the input and label into two directly from the dataset; 1st split object assigned to X and 2nd to target vector
+3. These lines of code is just to understand the data manipulation. This depends on the project 
+    print(X.shape) #op:- 442 rows with 10 columns
+    print(X[0]) #first row
+    modifying the content to plot as plotting needs 2d array
+    X=X[:,2] #selecting all rows (:) and third column (2)
+    X=X.reshape((-1,1)) #-1 is given to automatically calculate the number of rows required, while the number of rows is fixed (1)--> only one unknown dimension is possible
+4. Split the data into training and test set using model_selection from scikit
+    X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.33)
+5. Load the linear regression model from linear_model and train it using model.fit method
+    model = linear_model.LinearRegression()
+    model.fit(X_train, y_train)
+6. Create a prediction using model.predict()
+    y_pred = model.predict(X_test)
+7. plot the data
+
+CLEANING THE DATA (23/11/24)
+================
+We have a dataset of market of pumpkins. There are so many values in it that are missing, a mixture of number and string data etc. In this lesson, we will learn how to clean the data so that it is ready to be used for our model without any errors. 
+We use pandas (python data analysis) for shaping the data
+
+1. Import pandas as pd
+2. Load the data.
+    pumpData = pd.read_csv('pumpkin.csv')
+3. Check the data. 
+    pumpData.head() #first 5 rows
+4. Check if there are any missing data. 
+    pumpData.isnull().sum() #sum of missing data in each column
+5. Reduce the dataset to only few of its attributes. 
+    pumpData = pumpData.loc[:, listofcolumns] 
+    #here, : ==> all rows. we could also give pumpData[columnname] condition instead of : which would extract the particular columns of those rows that satisfy the condition
+6.  We need to find the average of pumpkin prices per month. for this, take the average of low price col and high price col for every row. also, get month of each pumpkin from date col
+7. Some additional processing like filtering, changing the values are done. 
+8. We plotted by grouping by the columns according to their months and taking mean of the prices.
+
+
