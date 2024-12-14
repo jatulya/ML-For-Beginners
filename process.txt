@@ -27,7 +27,7 @@ Here, we are using already in-build dataset in scikit-learn for learning purpose
     print(X[0]) #first row
     modifying the content to plot as plotting needs 2d array
     X=X[:,2] #selecting all rows (:) and third column (2)
-    X=X.reshape((-1,1)) #-1 is given to automatically calculate the number of rows required, while the number of rows is fixed (1)--> only one unknown dimension is possible
+    X=X.reshape((-1,1)) #-1 is given to automatically calculate the number of rows required, while the number of column is fixed (1)--> only one unknown dimension is possible
 4. Split the data into training and test set using model_selection from scikit
     X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.33)
 5. Load the linear regression model from linear_model and train it using model.fit method
@@ -55,5 +55,29 @@ We use pandas (python data analysis) for shaping the data
 6.  We need to find the average of pumpkin prices per month. for this, take the average of low price col and high price col for every row. also, get month of each pumpkin from date col
 7. Some additional processing like filtering, changing the values are done. 
 8. We plotted by grouping by the columns according to their months and taking mean of the prices.
+
+2.3 LinearRegression
+================
+Here, the dataset is cleaned using previous methods. Our goal is to find when it is the best time to buy pumpkins.
+Explaination of some lines of code used
+1. day_of_year = pd.to_datetime(pumpkins['Date']).apply(lambda dt: (dt-datetime(dt.year,1,1)).days)
+    pd.to_datetime(pumpkins['Date']) ==> converts to date
+    .apply() ==> apply lambda function to each element in the series (apply is pandas function)
+    lambda dt: (dt-datetime(dt.year,1,1)).days ==> lambda function to be applied
+    datetime(dt.year,1,1) ==> creates a date with Jan 1st, year (the year would be that particular date's year)
+    (dt-datetime(dt.year,1,1)) ==> calculates the difference between the date and Jan first of that year
+    .days ==> convert the difference into dates
+2. find the correlation between month and price, day_of_year and price using pandas' corr function
+    pumpkins['Price'].corr(pumpkins['Month'])
+3. from scatter plot of day_of_year with price, we found several points clustered together. which might imply that each cluster points to different variety. we check it.
+    ax=None #hold the axes --> multiple scatter plots on same figure
+    colors = ['red','blue','green','yellow'] #list of colors used to differentiate the varieties
+    #iterating over unique variety of pumpkin
+    for i,var in enumerate(new_pumpkins['Variety'].unique()):
+        #filtering to contain rows for that variety and creating new dataframe
+        df = new_pumpkins[new_pumpkins['Variety']==var]
+        ax = df.plot.scatter('DayOfYear','Price',ax=ax,c=colors[i],label=var)
+        #ax=ax, diff varieties on same axes. if ax=None, new axes are drawn, 
+        #label=var --> assigns label to the color given as legend
 
 
